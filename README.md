@@ -181,10 +181,10 @@ sudo apt-get install -y $(cat make-fnnas/script/ubuntu2404-make-fnnas-depends)
 
 1. Workflow configuration files are located in [.github/workflows](.github/workflows).
 
-2. Select `Build FnNAS` on the Actions page to compile using [build-fnnas-using-official-image.yml](.github/workflows/build-fnnas-using-official-image.yml). Click the `Run workflow` button to compile. In the options panel, you can set the FnNAS image file path in `Set fnnas image file path`, e.g., `https://fnnas.com/.../fnos_arm_1.0.0_258.img.xz` or other network download addresses. If not set, the official image saved in [ophub/fnnas](https://github.com/ophub/fnnas/releases/tag/fnnas_base_image) will be used by default.
+2. Select `Build FnNAS Image` on the Actions page to compile using [build-fnnas-image.yml](.github/workflows/build-fnnas-image.yml). Click the `Run workflow` button to compile. In the options panel, you can set the FnNAS image file path in `Custom fnnas image download url`, e.g., `https://fnnas.com/.../fnos_arm_1.0.0_258.img.xz` or other network download addresses. If not set, the official image saved in [fnnas_base_image](https://github.com/ophub/fnnas/releases/tag/fnnas_base_image) will be used by default.
 
 ```yaml
-- name: Build FnNAS
+- name: Build FnNAS Image
   uses: ophub/fnnas@main
   with:
     build_target: fnnas
@@ -223,10 +223,10 @@ The related parameters correspond to the `local packaging command`, please refer
 
 ## Compiling fnnas Kernel using GitHub Actions
 
-For details on how to compile the FnNAS-specific kernel, please refer to the instructions in [compile-kernel](.github/workflows/build-fnnas-kernel.yml).
+For details on how to compile the FnNAS-specific kernel, please refer to the instructions in [build-fnnas-kernel.yml](.github/workflows/build-fnnas-kernel.yml).
 
 ```yaml
-- name: Compile fnnas kernel
+- name: Build FnNAS Kernel
   uses: ophub/fnnas@main
   with:
     build_target: kernel

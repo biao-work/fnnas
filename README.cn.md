@@ -179,10 +179,10 @@ sudo apt-get install -y $(cat make-fnnas/script/ubuntu2404-make-fnnas-depends)
 
 1. 关于 Workflows 文件的配置在 [.github/workflows](.github/workflows) 文件里。
 
-2. 在 [Actions](https://github.com/ophub/fnnas/actions) 页面里选择 ***`Build FnNAS`*** 即可使用 [build-fnnas-using-official-image.yml](.github/workflows/build-fnnas-using-official-image.yml) 进行编译。点击 ***`Run workflow`*** 按钮即可编译。在选项面板里，可以在 `Set fnnas image file path` 里设置 FnNAS 镜像文件的路径，例如： `https://fnnas.com/.../fnos_arm_1.0.0_258.img.xz` 等网络下载地址，如果不设置，将默认使用 [ophub/fnnas](https://github.com/ophub/fnnas/releases/tag/fnnas_base_image) 里保存的官方镜像进行编译。
+2. 在 [Actions](https://github.com/ophub/fnnas/actions) 页面里选择 ***`Build FnNAS Image`*** 即可使用 [build-fnnas-image.yml](.github/workflows/build-fnnas-image.yml) 进行编译。点击 ***`Run workflow`*** 按钮即可编译。在选项面板里，可以在 `Custom fnnas image download url` 里设置 FnNAS 镜像文件的路径，例如： `https://fnnas.com/.../fnos_arm_1.0.0_258.img.xz` 等网络下载地址，如果不设置，将默认使用 [fnnas_base_image](https://github.com/ophub/fnnas/releases/tag/fnnas_base_image) 里保存的官方镜像进行编译。
 
 ```yaml
-- name: Build FnNAS
+- name: Build FnNAS Image
   uses: ophub/fnnas@main
   with:
     build_target: fnnas
@@ -221,10 +221,10 @@ sudo apt-get install -y $(cat make-fnnas/script/ubuntu2404-make-fnnas-depends)
 
 ## 使用 GitHub Actions 编译 fnnas 内核
 
-飞牛专用内核的编译方法详见 [compile-kernel](.github/workflows/build-fnnas-kernel.yml) 的说明。
+飞牛专用内核的编译方法详见 [build-fnnas-kernel.yml](.github/workflows/build-fnnas-kernel.yml) 的说明。
 
 ```yaml
-- name: Compile the kernel
+- name: Build FnNAS Kernel
   uses: ophub/fnnas@main
   with:
     build_target: kernel
