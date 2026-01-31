@@ -152,13 +152,13 @@ jobs:
 
           [[ "${?}" -ne "0" ]] && echo "Download failed." && exit 1
 
-          ln -sf /builder/fnnas ${{ github.workspace }}/fnnas
-          ln -sf /builder/fnnas /home/runner/work/_actions/ophub/fnnas/main/fnnas
+          #ln -sf /builder/fnnas ${{ github.workspace }}/fnnas
+          #ln -sf /builder/fnnas /home/runner/work/_actions/ophub/fnnas/main/fnnas
 
           echo "status=success" >> ${GITHUB_OUTPUT}
       - name: Copy custom DTS
         run: |
-          cp -f fnnas/custom-dts/鲸盒rk3588s-rock-5c.dts kernel/arch/arm64/boot/dts/rockchip/rk3588.dts
+          cp -f ${{ github.workspace }}/fnnas/custom-dts/鲸盒rk3588s-rock-5c.dts kernel/arch/arm64/boot/dts/rockchip/rk3588.dts
 
       # 4. 编译内核（指定 DTS）
       - name: Build kernel
