@@ -4,7 +4,7 @@
 # Copyright (C) 2026 https://github.com/ophub/fnnas
 #==========================================================================
 
-name: Build FnNAS Kernel
+name: Build FnNAS Kernel DTB
 
 on:
   repository_dispatch:
@@ -166,21 +166,7 @@ jobs:
           cd kernel
           make defconfig
           make -j$(nproc) Image dtbs CONFIG_DEFAULT_DEVICE_TREE="rk3588"
-          
-      - name: Compile only DTB files
-        uses: ophub/fnnas@main
-        if: ${{ steps.down.outputs.status == 'success' && !cancelled() }}
-        with:
-          # 关键：指定仅编译 dtbs（设备树二进制文件）
-          build_target: dtbs
-          fnnas_path: fnnas/*.img.xz
-          debs_repo: ${{ inputs.debs_repo }}
-          dtbs_version: ${{ inputs.dtbs_version }}
-          # 仅安装编译 DTB 必需的依赖（精简）
-          debs_install: "dtc bc libssl-dev"
-          # 指定要编译的 DTB 文件名（替换成你需要的，比如 rk3588.dtb）
-          dtbs_install: ${{ inputs.dtbs_install || 'rk3588.dtb' }}
-          
+                
       - name: Upload DTB artifact
         uses: actions/upload-artifact@v4
         with:
