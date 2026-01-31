@@ -156,33 +156,35 @@ jobs:
           ln -sf /builder/fnnas /home/runner/work/_actions/ophub/fnnas/main/fnnas
 
           echo "status=success" >> ${GITHUB_OUTPUT}
+      - name: Copy custom DTS
+        run: |
+          cp fnnas/custom-dts/my-custom.dts kernel/arch/arm64/boot/dts/rockchip/rk3588.dts
 
-      - name: Compile the fnnas kernel
+      # 4. 编译内核（指定 DTS）
+      - name: Build kernel
+        run: |
+          cd kernel
+          make defconfig
+          make -j$(nproc) Image dtbs CONFIG_DEFAULT_DEVICE_TREE="rk3588"
+          
+      - name: Compile only DTB files
         uses: ophub/fnnas@main
         if: ${{ steps.down.outputs.status == 'success' && !cancelled() }}
         with:
-          build_target: kernel
+          # 关键：指定仅编译 dtbs（设备树二进制文件）
+          build_target: dtbs
           fnnas_path: fnnas/*.img.xz
           debs_repo: ${{ inputs.debs_repo }}
           dtbs_version: ${{ inputs.dtbs_version }}
-          debs_install: ${{ inputs.debs_install }}
-          dtbs_install: ${{ inputs.dtbs_install }}
-
-      - name: Upload Kernel to Release
-        uses: ncipollo/release-action@main
-        if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
+          # 仅安装编译 DTB 必需的依赖（精简）
+          debs_install: "dtc bc libssl-dev"
+          # 指定要编译的 DTB 文件名（替换成你需要的，比如 rk3588.dtb）
+          dtbs_install: ${{ inputs.dtbs_install || 'rk3588.dtb' }}
+          
+      - name: Upload DTB artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag: kernel_fnnas
-          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
-          allowUpdates: true
-          removeArtifacts: false
-          replacesArtifacts: true
-          makeLatest: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            - FnNAS Dedicated Kernel. Based on official [.debs](https://github.com/ophub/fnnas/releases/tag/fnnas_debs) packages from `fnnas.com`,
-              and repackaged into .tar.gz format using the `rekernel` tool.
-              It is optimized for batch packaging and supports online updates via the `fnnas-update` command.
-            - FnNAS 专用内核。基于 `fnnas.com` 官方提供的 [.debs](https://github.com/ophub/fnnas/releases/tag/fnnas_debs) 安装包，
-              利用本仓库的 `rekernel` 工具重新封装为 .tar.gz 格式。
-              该内核既适用于批量打包，也支持通过 `fnnas-update` 命令进行在线更新。
+          name: custom-dtb
+          path: kernel/arch/arm64/boot/dts/rockchip/rk3588.dtb
+
+          
