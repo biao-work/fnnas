@@ -158,7 +158,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
       - name: Copy custom DTS
         run: |
-          cp fnnas/custom-dts/my-custom.dts kernel/arch/arm64/boot/dts/rockchip/rk3588.dts
+          cp fnnas/custom-dts/鲸盒rk3588s-rock-5c.dts kernel/arch/arm64/boot/dts/rockchip/rk3588.dts
 
       # 4. 编译内核（指定 DTS）
       - name: Build kernel
